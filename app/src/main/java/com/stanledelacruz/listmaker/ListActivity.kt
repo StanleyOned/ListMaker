@@ -21,6 +21,8 @@ class ListActivity : AppCompatActivity(), ListSelectionFragment.OnListItemFragme
         val LIST_DETAIL_REQUEST_CODE = 123
     }
 
+    private var largeScreen = false
+    private var listFragment: ListDetailFragment? = null
     private var listSelectionFragment: ListSelectionFragment = ListSelectionFragment.newInstance()
     private var fragmentContainer: FrameLayout? = null
 
@@ -32,12 +34,11 @@ class ListActivity : AppCompatActivity(), ListSelectionFragment.OnListItemFragme
     }
 
     private fun setupViews() {
+
+        listSelectionFragment = supportFragmentManager.findFragmentById(R.id.list_selection_fragment) as ListSelectionFragment
         fragmentContainer = findViewById(R.id.fragment_container)
 
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, listSelectionFragment)
-            .commit()
+        largeScreen = fragmentContainer != null
 
         fab.setOnClickListener { view ->
             showCreateListDialog()
@@ -45,29 +46,71 @@ class ListActivity : AppCompatActivity(), ListSelectionFragment.OnListItemFragme
     }
 
     private fun showCreateListDialog() {
-        val dialogTitle = getString(R.string.name_of_list)
-        val positiveButtonTitle = getString(R.string.create_list)
+        val taskEditText = EditText(this)
+        taskEditText.inputType = InputType.TYPE_CLASS_TEXT
 
-        val builder = AlertDialog.Builder(this)
-        val listTitleEditText = EditText(this)
-        listTitleEditText.inputType = InputType.TYPE_CLASS_TEXT
-
-        builder.setTitle(dialogTitle)
-        builder.setView(listTitleEditText)
-
-        builder.setPositiveButton(positiveButtonTitle) { dialog, i ->
-            val list = TaskList(listTitleEditText.text.toString())
-            listSelectionFragment.addList(list)
-            dialog.dismiss()
-            showListDetail(list)
-        }
-        builder.create().show()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.name_of_list)
+            .setView(taskEditText).setPositiveButton(R.string.create_list) { dialog, _ ->
+                val list = TaskList(taskEditText.text.toString())
+                listSelectionFragment?.addList(list)
+                dialog.dismiss()
+                showListDetail(list)
+            }.create().show()
     }
 
     private fun showListDetail(list: TaskList) {
-        val listDetailIntent = Intent(this, ListDetailActivity::class.java)
-        listDetailIntent.putExtra(INTENT_LIST_KEY, list)
-        startActivityForResult(listDetailIntent, LIST_DETAIL_REQUEST_CODE)
+        if (!largeScreen) {
+            val listDetailIntent = Intent(this, ListDetailActivity::class.java)
+            listDetailIntent.putExtra(INTENT_LIST_KEY, list)
+            startActivityForResult(listDetailIntent, LIST_DETAIL_REQUEST_CODE)
+        } else {
+            title = list.name
+            listFragment = ListDetailFragment.newInstance(list)
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, listFragment, getString(R.string.list_fragment_tag))
+                .addToBackStack(null)
+                .commit()
+
+            fab.setOnClickListener {
+                showCreateTaskDialog()
+            }
+
+        }
+    }
+
+    private fun showCreateTaskDialog() {
+        val taskEditText = EditText(this)
+        taskEditText.inputType = InputType.TYPE_CLASS_TEXT
+        AlertDialog.Builder(this)
+            .setTitle(R.string.task_to_add)
+            .setView(taskEditText)
+            .setPositiveButton(R.string.add_task, { dialog, _ ->
+                val task = taskEditText.text.toString()
+                listFragment?.addTask(task)
+                dialog.dismiss()
+            })
+            .create()
+            .show() }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        title = resources.getString(R.string.app_name)
+
+        listFragment?.list?.let {
+            listSelectionFragment.listDataManager.saveList(it)
+        }
+
+        if (listFragment != null) {
+            supportFragmentManager.beginTransaction().remove(listFragment).commit()
+            listFragment = null
+        }
+
+        fab.setOnClickListener {
+            showCreateListDialog()
+        }
     }
 
     override fun onListItemClicked(list: TaskList) {
