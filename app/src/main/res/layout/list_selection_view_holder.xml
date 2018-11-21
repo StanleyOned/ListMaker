@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        card_view:cardCornerRadius="2dp">
 
-    <TextView
-            android:text="Item: 1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/itemNumber" android:layout_marginLeft="16dp"
-            android:layout_margin="16dp"/>
-    <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/itemString"
-            android:layout_margin="16dp"/>
-</LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content">
+
+        <TextView
+                android:text="Item: 1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/itemNumber" android:layout_marginLeft="16dp"
+                android:layout_margin="16dp"/>
+        <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/itemString"
+                android:layout_margin="16dp"/>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
