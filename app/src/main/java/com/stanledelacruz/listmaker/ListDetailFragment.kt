@@ -27,7 +27,7 @@ class ListDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_list_detail, container, false)
-        listItemsRecyclerView = view.findViewById(R.id.list_items_recyclerview)
+        listItemsRecyclerView = view.findViewById(R.id.list_items_reyclerview)
         listItemsRecyclerView.adapter = ListItemsRecyclerViewAdapter(list)
         listItemsRecyclerView.layoutManager = LinearLayoutManager(activity)
         return view

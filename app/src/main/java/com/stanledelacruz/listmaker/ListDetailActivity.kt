@@ -24,7 +24,7 @@ class ListDetailActivity : AppCompatActivity() {
         list = intent.getParcelableExtra(ListActivity.INTENT_LIST_KEY)
         title = list.name
 
-        listItemsRecyclerView = findViewById(R.id.list_items_recyclerview)
+        listItemsRecyclerView = findViewById(R.id.list_items_reyclerview)
         listItemsRecyclerView.adapter = ListItemsRecyclerViewAdapter(list)
         listItemsRecyclerView.layoutManager = LinearLayoutManager(this)
 

@@ -86,11 +86,11 @@ class ListActivity : AppCompatActivity(), ListSelectionFragment.OnListItemFragme
         AlertDialog.Builder(this)
             .setTitle(R.string.task_to_add)
             .setView(taskEditText)
-            .setPositiveButton(R.string.add_task, { dialog, _ ->
+            .setPositiveButton(R.string.add_task) { dialog, _ ->
                 val task = taskEditText.text.toString()
                 listFragment?.addTask(task)
                 dialog.dismiss()
-            })
+            }
             .create()
             .show() }
 
